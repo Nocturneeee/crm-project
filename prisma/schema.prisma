@@ -1,6 +1,6 @@
 // File: prisma/schema.prisma
 
-// Konfigurasi Database (Ganti provider dan url sesuai kebutuhan)
+
 datasource db {
   provider = "mysql" // Ganti dengan "mysql" atau "sqlite" jika berbeda
   url      = env("DATABASE_URL")
@@ -19,7 +19,7 @@ model Role {
   name        String   @unique // ADMIN, SALES, LEAD
   description String?
   
-  // Relasi: Satu Role bisa dimiliki oleh banyak User
+  // Satu Role bisa = banyak user
   users User[]
 }
 
@@ -35,7 +35,7 @@ model User {
   roleId    Int
   role      Role @relation(fields: [roleId], references: [id])
   
-  // Relasi ke Leads: User adalah pemiliki Lead
+  // Relasi ke Leads: User = pemiliki Lead
   leads     Lead[]
 }
 
@@ -51,7 +51,7 @@ model Lead {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relasi ke User (Siapa pemilik lead ini)
+  // Relasi ke User/pemilik lead
   ownerId Int
   owner   User @relation(fields: [ownerId], references: [id])
 }
