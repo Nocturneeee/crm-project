@@ -2,7 +2,6 @@ import { PrismaClient } from '../src/generated/prisma';
 
 const prisma = new PrismaClient();
 
-// Data roles standar untuk CRM
 const roleData = [
   { name: 'ADMIN' },
   { name: 'SALES' },
