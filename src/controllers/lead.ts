@@ -1,10 +1,10 @@
 // File: src/controllers/lead.ts
 
 import { Response } from 'express';
-import prisma from '../utils/prisma'; // Pastikan path ke prisma utility benar
-import { AuthRequest } from '../middlewares/auth'; // Menggunakan AuthRequest interface
+import prisma from '../utils/prisma'; 
+import { AuthRequest } from '../middlewares/auth'; //AuthRequest interface
 
-// --- Mendapatkan Semua Leads (Hanya untuk ADMIN atau Leads yang dimiliki) ---
+// --- (Hanya untuk ADMIN atau Leads) ---
 export const getLeads = async (req: AuthRequest, res: Response) => {
     try {
         const userRole = req.user?.role;
@@ -13,13 +13,13 @@ export const getLeads = async (req: AuthRequest, res: Response) => {
         let leads;
         
         if (userRole === 'ADMIN') {
-            // ADMIN dapat melihat semua leads di sistem
+            // ADMIN 
             leads = await prisma.lead.findMany({
                 include: { owner: { select: { id: true, name: true, email: true } } },
                 orderBy: { createdAt: 'desc' }
             });
         } else {
-            // Pengguna lain (misalnya SALES) hanya melihat leads yang menjadi ownerId-nya
+            
             leads = await prisma.lead.findMany({
                 where: { ownerId: userId },
                 include: { owner: { select: { id: true, name: true, email: true } } },
@@ -35,7 +35,7 @@ export const getLeads = async (req: AuthRequest, res: Response) => {
     }
 };
 
-// --- Membuat Lead Baru ---
+// --- Lead Baru ---
 export const createLead = async (req: AuthRequest, res: Response) => {
     const { name, company, email, phone, status, value } = req.body;
     const ownerId = req.user?.userId; // ID pengguna yang sedang login akan menjadi owner
@@ -66,7 +66,7 @@ export const createLead = async (req: AuthRequest, res: Response) => {
     }
 };
 
-// --- Mengupdate Lead ---
+// --- update Lead ---
 export const updateLead = async (req: AuthRequest, res: Response) => {
     const leadId = parseInt(req.params.id);
     const updates = req.body;
@@ -83,7 +83,7 @@ export const updateLead = async (req: AuthRequest, res: Response) => {
             return res.status(404).json({ error: 'Lead tidak ditemukan.' });
         }
 
-        // Otorisasi: Hanya ADMIN atau pemilik lead yang boleh mengupdate
+        // Otorisasi: Hanya ADMIN 
         if (req.user?.role !== 'ADMIN' && lead.ownerId !== userId) {
             return res.status(403).json({ error: 'Anda tidak memiliki izin untuk mengupdate lead ini.' });
         }
@@ -92,7 +92,7 @@ export const updateLead = async (req: AuthRequest, res: Response) => {
             where: { id: leadId },
             data: {
                 ...updates,
-                // Pastikan value diubah ke float jika ada
+                
                 value: updates.value !== undefined ? parseFloat(updates.value) : updates.value, 
             },
         });
@@ -121,7 +121,7 @@ export const deleteLead = async (req: AuthRequest, res: Response) => {
             return res.status(404).json({ error: 'Lead tidak ditemukan.' });
         }
 
-        // Otorisasi: Hanya ADMIN atau pemilik lead yang boleh menghapus
+        // Otorisasi: Hanya ADMIN 
         if (req.user?.role !== 'ADMIN' && lead.ownerId !== userId) {
             return res.status(403).json({ error: 'Anda tidak memiliki izin untuk menghapus lead ini.' });
         }
@@ -136,5 +136,4 @@ export const deleteLead = async (req: AuthRequest, res: Response) => {
     }
 };
 
-// Tambahkan ekspor default agar modul jelas tersedia untuk import default/named
 export default { getLeads, createLead, updateLead, deleteLead };
