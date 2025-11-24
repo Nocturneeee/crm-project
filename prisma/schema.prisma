@@ -2,14 +2,14 @@
 
 
 datasource db {
-  provider = "mysql" // Ganti dengan "mysql" atau "sqlite" jika berbeda
+  provider = "mysql" 
   url      = env("DATABASE_URL")
 }
 
 // Konfigurasi Prisma Client
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma" // <- hapus/komentari agar menggunakan default @prisma/client
+  // output   = "../src/generated/prisma" 
 }
 
 // --- MODEL DATABASE ---
