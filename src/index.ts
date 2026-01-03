@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import leadRoutes from './routes/lead.routes';
 import analyticsRoutes from './routes/analytics.routes';
+import roleRoutes from './routes/role.routes';
 
 // Load environment variables
 dotenv.config();
@@ -28,6 +29,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/leads', leadRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
+app.use('/api/v1/roles', roleRoutes);
 
 // Start server
 app.listen(PORT, () => {
@@ -36,4 +38,5 @@ app.listen(PORT, () => {
     console.log('- POST /api/v1/auth/login');
     console.log('- GET  /api/v1/analytics/dashboard');
     console.log('- GET  /api/v1/leads');
+    console.log('- GET  /api/v1/roles');
 });

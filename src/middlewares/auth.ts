@@ -3,15 +3,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-// Interface untuk Request dengan user yang sudah diautentikasi
-// Ini memungkinkan kita mengakses req.user di controller
 export interface AuthRequest extends Request {
     user?: { userId: number; role: string; [key: string]: any };
 }
 
-// Middleware untuk memverifikasi token JWT (Token yang Anda dapatkan saat Login)
+// Middleware untuk memverifikasi token JWT 
 export const authenticate = (req: AuthRequest, res: Response, next: NextFunction) => {
-    // 1. Ambil token dari header Authorization (Format: Bearer <token>)
+    // 1. Ambil dari header Authoriz
     const authHeader = String(req.headers.authorization || '');
     if (!authHeader.startsWith('Bearer ')) return res.status(401).json({ error: 'Unauthorized' });
 
@@ -19,7 +17,7 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
     if (!process.env.JWT_SECRET) return res.status(500).json({ error: 'JWT secret not set' });
 
     try {
-        // 2. Verifikasi token
+        // Verif token
         const payload = jwt.verify(token, process.env.JWT_SECRET) as any;
         req.user = { userId: payload.userId, role: payload.role };
         return next();
@@ -28,7 +26,7 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
     }
 };
 
-// Middleware opsional untuk Otorisasi (Memeriksa Role)
+// Middleware opsional untuk Otorisasi 
 export const authorizeRole = (requiredRole: 'ADMIN' | 'SALES' | 'LEAD') => {
     return (req: AuthRequest, res: Response, next: NextFunction) => {
         if (!req.user || req.user.role !== requiredRole) {

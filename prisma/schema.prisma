@@ -1,6 +1,5 @@
 // File: prisma/schema.prisma
 
-// Konfigurasi Database (Ganti provider dan url sesuai kebutuhan)
 datasource db {
   provider = "mysql" // Ganti dengan "mysql" atau "sqlite" jika berbeda
   url      = env("DATABASE_URL")
@@ -15,43 +14,61 @@ generator client {
 // --- MODEL DATABASE ---
 
 model Role {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique // ADMIN, SALES, LEAD
+  id          Int     @id @default(autoincrement())
+  name        String  @unique // ADMIN, SALES, LEAD
   description String?
-  
-  // Relasi: Satu Role bisa dimiliki oleh banyak User
-  users User[]
+
+  User User[]
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
-  email     String @unique
-  password  String @db.VarChar(255) // <- pastikan panjang cukup
+  email     String   @unique
+  password  String   @db.VarChar(255) // <- pastikan panjang cukup
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relasi ke Role
-  roleId    Int
-  role      Role @relation(fields: [roleId], references: [id])
-  
-  // Relasi ke Leads: User adalah pemiliki Lead
-  leads     Lead[]
+  roleId Int
+  role   Role @relation(fields: [roleId], references: [id])
+
+  leads Lead[]
 }
 
 // --- MODEL BARU: Lead Management ---
-model Lead {
-  id          Int      @id @default(autoincrement())
-  name        String
-  company     String?
-  email       String?
-  phone       String?
-  status      String   @default("New") // New, Contacted, Qualified, Lost
-  value       Float?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+enum LeadStatus {
+  LEAD_IN // Lead masuk (New)
+  CONTACT_MADE // Kontak sudah dibuat
+  NEED_IDENTIFIED // Kebutuhan teridentifikasi
+  PROPOSAL_MADE // Proposal dibuat
+  WON // Deal menang
+  LOST // Deal hilang
+  DELETE // Lead dihapus/tidak relevan
+}
 
-  // Relasi ke User (Siapa pemilik lead ini)
+// Tambah enum untuk sumber lead
+enum LeadSource {
+  WEBSITE
+  ADS_CAMPAIGN
+  REFERRAL
+  EVENT_OFFLINE
+  SOCIAL_MEDIA
+}
+
+model Lead {
+  id        Int        @id @default(autoincrement())
+  name      String
+  company   String?
+  email     String?
+  phone     String?
+  status    LeadStatus @default(LEAD_IN)
+  value     Float?
+  priority  String?    @default("Medium") // High, Medium, Low
+  source    LeadSource? // Tambah field sumber lead
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
   ownerId Int
   owner   User @relation(fields: [ownerId], references: [id])
 }

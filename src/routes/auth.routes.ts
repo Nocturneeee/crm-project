@@ -1,7 +1,7 @@
 // File: src/routes/auth.routes.ts
 
 import { Router } from 'express';
-import { login } from '../controllers/auth'; // Hapus register dari import
+import { login } from '../controllers/auth'; 
 
 
 const router = Router();

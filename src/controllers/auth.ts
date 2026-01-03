@@ -5,7 +5,7 @@ import prisma from '../utils/prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-// --- Fungsi Login (Sign In) ---
+// --- Fungsi Login ---
 export const login = async (req: Request, res: Response) => {
     console.time('login-process');
 

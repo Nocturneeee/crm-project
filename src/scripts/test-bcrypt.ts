@@ -11,7 +11,7 @@ async function main() {
   console.log('Stored hash (raw):', JSON.stringify(hash));
   console.log('Hash length:', hash.length);
 
-  const plain = 'PasswordTest123'; // gunakan password yang Anda kirim saat login
+  const plain = 'PasswordTest123';
   const result = await bcrypt.compare(plain, hash);
   console.log('bcrypt.compare result:', result);
 
