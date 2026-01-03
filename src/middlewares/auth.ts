@@ -7,9 +7,15 @@ export interface AuthRequest extends Request {
     user?: { userId: number; role: string; [key: string]: any };
 }
 
+<<<<<<< HEAD
 // Middleware untuk memverifikasi token JWT 
 export const authenticate = (req: AuthRequest, res: Response, next: NextFunction) => {
     // 1. Ambil dari header Authoriz
+=======
+// Middleware untuk memverifikasi token JWT = didapat saat login
+export const authenticate = (req: AuthRequest, res: Response, next: NextFunction) => {
+    // Token dari header Authorization (Format: Bearer <token>)
+>>>>>>> 225f451fe7dd7313faacf7fd9397b2230ae38b85
     const authHeader = String(req.headers.authorization || '');
     if (!authHeader.startsWith('Bearer ')) return res.status(401).json({ error: 'Unauthorized' });
 
@@ -26,7 +32,11 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
     }
 };
 
+<<<<<<< HEAD
 // Middleware opsional untuk Otorisasi 
+=======
+// Middleware opsional untuk Otorisasi =  Pemeriksa Rol
+>>>>>>> 225f451fe7dd7313faacf7fd9397b2230ae38b85
 export const authorizeRole = (requiredRole: 'ADMIN' | 'SALES' | 'LEAD') => {
     return (req: AuthRequest, res: Response, next: NextFunction) => {
         if (!req.user || req.user.role !== requiredRole) {
